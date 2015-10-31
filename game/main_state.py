@@ -3,12 +3,13 @@ import json
 import os
 import sys
 sys.path.append('../LabsAll/Labs')
+import game_framework
+
+import main_state2
 
 from pico2d import *
 
-import game_framework
-import title_state
-import main_state2
+
 
 class Ground:
     def __init__(self):
@@ -36,7 +37,7 @@ class Ball:
         self.image = load_image('SoccerBall.png')
 
     def draw(self):
-        self.image.clip_draw(0,0,50,48,400,430)
+        self.image.clip_draw(0,0,50,48,400,200)
 
 class User:
     def __init__(self):
@@ -63,11 +64,19 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_MOUSEMOTION:
-            x,y = event.x,800-event.y
+            if(x<150):
+                x,y=150,800-event.y
+            elif(x>650):
+                x,y=650,800-event.y
+            elif(x>=150 and x<=650):
+                x,y = event.x,800-event.y
+            elif(y>430):
+                x,y=event.x,430
+
         elif event.type == SDL_KEYDOWN and event.key ==SDLK_ESCAPE:
             game_framework.quit()
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-             game_framework.change_state(main_state2)
+             game_framework.push_state(main_state2)
 
 
 ground=None
@@ -113,14 +122,10 @@ def draw():
     ai1.draw()
     update_canvas()
 
-def main():
-    enter()
-    while running:
-        handle_events()
-        update()
-        draw()
-    exit()
+def pause():
+    pass
 
-if __name__=='__main__':
-    main()
+
+def resume():
+    pass
 
