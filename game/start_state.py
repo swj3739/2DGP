@@ -11,8 +11,7 @@ logo_time = 0.0
 def enter():
     global image
     open_canvas(800,480)
-    image=load_image('game_credit.png')
-
+    image=load_image('resource/etc/game_credit.png')
 
 
 def exit():
@@ -39,11 +38,8 @@ def draw():
     update_canvas()
 
 
-
-
 def handle_events():
     events = get_events()
-
 
 
 def pause(): pass

@@ -7,11 +7,11 @@ name = "TitleState"
 image = None
 press=None
 
+
 def enter():
     global image,press
-    image = load_image('title.png')
-    press = load_image('press.png')
-
+    image = load_image('resource/etc/title.png')
+    press = load_image('resource/etc/press.png')
 
 
 def exit():
@@ -30,7 +30,7 @@ def handle_events():
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                game_framework.change_state(main_state)
+                game_framework.push_state(main_state)
 
 
 def draw():
@@ -38,11 +38,6 @@ def draw():
     image.draw(400,300)
     press.draw(400,120)
     update_canvas()
-
-
-
-
-
 
 
 def update():
