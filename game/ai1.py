@@ -6,12 +6,22 @@ from pico2d import *
 
 class Ai1:
 
+    PIXEL_PER_METER = (10.0 / 0.3) # 10 PIXEL 30cm
+    RUN_SPEED_KMPH = 30.0          # Km / Hour 캐릭터속도조절가능
+    RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+    RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+    RUN_SPEED_PPS = (RUN_SPEED_MPS *  PIXEL_PER_METER) #초당 몇 픽셀?
+
+    TIME_PER_ACTION = 0.5
+    ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+    FRAMES_PER_ACTION = 8
+
     image = None;
 
     LEFT_RUN, RIGHT_RUN= 0, 1
 
     def handle_left_run(self):
-        self.x -= 5
+        self.x -= self.distance
         self.run_frames += 1
         if self.x < 150:
             self.state = self.RIGHT_RUN
@@ -19,7 +29,7 @@ class Ai1:
 
 
     def handle_right_run(self):
-        self.x += 5
+        self.x += self.distance
         self.run_frames += 1
         if self.x > 650:
             self.state = self.LEFT_RUN
@@ -33,7 +43,9 @@ class Ai1:
     }
 
 
-    def update(self):
+
+    def update(self,frame_time):
+        self.distance = Ai1.RUN_SPEED_PPS * frame_time
         self.frame = (self.frame + 1) % 1
         self.handle_state[self.state](self)
 
@@ -42,6 +54,7 @@ class Ai1:
         self.x, self.y = 300,750
         self.frame = 7
         self.run_frames = 0
+        self.distance = 0
         self.state = self.RIGHT_RUN
         if Ai1.image == None:
             Ai1.image = load_image('resource/character/AI1.png')

@@ -10,6 +10,8 @@ from pico2d import *
 from ball import Ball
 from ai1 import Ai1
 
+time = 0
+
 class Ground:
     def __init__(self):
         self.image = load_image('resource/background/playground.png')
@@ -85,14 +87,15 @@ def handle_events():
 
         elif event.type == SDL_KEYDOWN and event.key ==SDLK_ESCAPE:
             game_framework.quit()
-        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-             game_framework.push_state(main_state2)
+        #elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
+           #  game_framework.push_state(main_state2)
 
 
 ground=None
 audience1=None
 audience2=None
 running=True
+current_time = get_time()
 x, y = 100, 100
 hide_cursor()
 
@@ -118,9 +121,17 @@ def exit():
     del(ai1)
     close_canvas()
 
+def get_frame_time():
+
+    global current_time
+    frame_time = get_time() - current_time
+    current_time += frame_time
+    return frame_time
 
 def update():
-     ai1.update()
+     global time
+     time = get_frame_time()
+     ai1.update(time)
 
 
 def draw():
