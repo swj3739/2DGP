@@ -7,9 +7,9 @@ import game_framework
 import main_state2
 from pico2d import *
 
-from ball import Ball
-from ai1 import Ai1
 
+from ai1 import Ai1
+from ball import Ball
 time = 0
 
 class Ground:
@@ -40,12 +40,20 @@ class User:
     image = None;
 
     def __init__(self):
+
         if User.image == None:
             User.image = load_image('resource/character/User.png')
 
+    def get_bb(self):
+        return self.x - 50, self.y - 50, self.x  + 50, self.y + 50
+
+    def update(self,frame_time):
+        self.x, self.y = x, y
+
 
     def draw(self):
-        self.image.clip_draw(0, 0, 100, 112,x, y)
+        self.image.clip_draw(0, 0, 100, 112,self.x,self.y)
+        print(self.x ,self.y)
 
 
 def handle_events():
@@ -91,6 +99,17 @@ def handle_events():
            #  game_framework.push_state(main_state2)
 
 
+def collide(a, b):
+   left_a, bottom_a, right_a, top_a = a.get_bb()
+   left_b, bottom_b, right_b, top_b = b.get_bb()
+
+   if left_a > right_b: return False
+   if right_a < left_b: return False
+   if top_a < bottom_b: return False
+   if bottom_a > top_b: return False
+   return True
+
+
 ground=None
 audience1=None
 audience2=None
@@ -132,6 +151,11 @@ def update():
      global time
      time = get_frame_time()
      ai1.update(time)
+     ball.update(time)
+     user.update(time)
+
+     if collide(user,ball):
+         print("collision")
 
 
 def draw():
