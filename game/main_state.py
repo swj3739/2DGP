@@ -13,11 +13,26 @@ from ball import Ball
 time = 0
 
 class Ground:
+
+    image = None;
+
     def __init__(self):
-        self.image = load_image('resource/background/playground.png')
+        if Ground.image == None:
+            Ground.image = load_image('resource/background/playground.png')
+        self.x,self.y=400,400
 
     def draw(self):
+
         self.image.clip_draw(0,0,600,751,400,430)
+
+
+
+    def get_bb(self):
+        return self.x - 265, self.y - 310, self.x  + 265, self.y + 370
+
+
+    def draw_bb(self):
+        draw_rectangle(*self.get_bb())
 
 
 class Audience1:
@@ -45,10 +60,14 @@ class User:
             User.image = load_image('resource/character/User.png')
 
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x  + 50, self.y + 50
+        return self.x - 30, self.y - 40, self.x  + 30, self.y + 40
 
     def update(self,frame_time):
         self.x, self.y = x, y
+
+
+    def draw_bb(self):
+        draw_rectangle(*self.get_bb())
 
 
     def draw(self):
@@ -74,7 +93,7 @@ def handle_events():
                 x,y = 651, 800-event.y
                 if( event.x <= 650):
 
-                    x = 650
+                    x = 651
             elif(x >= 150 and x <= 650):
                 x,y = event.x,800-event.y
 
@@ -84,13 +103,13 @@ def handle_events():
                 if(x < 150):
                     x = 149
                 elif( x> 650 ):
-                    x = 650
+                    x = 651
             elif(y < 100 ):
                  x,y = event.x,100
                  if ( x <150):
                     x = 149
                  elif( x > 650):
-                    x = 650
+                    x = 651
 
 
         elif event.type == SDL_KEYDOWN and event.key ==SDLK_ESCAPE:
@@ -106,6 +125,16 @@ def collide(a, b):
    if left_a > right_b: return False
    if right_a < left_b: return False
    if top_a < bottom_b: return False
+   if bottom_a > top_b: return False
+   return True
+
+def collide_ground(a, b):
+   left_a, bottom_a, right_a, top_a = a.get_bb()
+   left_b, bottom_b, right_b, top_b = b.get_bb()
+
+   if left_a < right_b: return False
+   if right_a > left_b: return False
+   if top_a <bottom_b: return False
    if bottom_a > top_b: return False
    return True
 
@@ -155,7 +184,13 @@ def update():
      user.update(time)
 
      if collide(user,ball):
-         print("collision")
+         ball.moveball_up(time)
+
+
+     if collide(ai1,ball):
+         ball.moveball_down(time)
+
+
 
 
 def draw():
@@ -166,6 +201,10 @@ def draw():
     audience2.draw()
     ball.draw()
     ai1.draw()
+    user.draw_bb()
+    ball.draw_bb()
+    ai1.draw_bb()
+    ground.draw_bb()
     update_canvas()
 
 
