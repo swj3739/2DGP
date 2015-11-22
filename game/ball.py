@@ -16,11 +16,14 @@ class Ball:
 
 
     def __init__(self):
-        self.x , self.y = 400, 200
+        self.x , self.y = 400, 300
         self.frame = 7
         self.run_frames = 0
         self.distance_x = 0
         self.distance_y = 0
+        self.count_user = 0
+        self.count_ai = 0
+        self.r = 0
         if Ball.image == None:
              Ball.image = load_image('resource/etc/SoccerBall.png')
 
@@ -29,11 +32,21 @@ class Ball:
         self.frame = (self.frame + 1) % 1
         self.y += self.distance_y
         self.x += self.distance_x
-        if self.y > 800 or self.y < 70:
-            self.y = 200
+        self.r = random.randint(0,10)
+        if self.y > 800 :
+            self.y = 300
             self.x = 400
             self.distance_y = 0
             self.distance_x = 0
+            self.count_user = 1
+
+        if  self.y < 70:
+            self.y = 300
+            self.x = 400
+            self.distance_y = 0
+            self.distance_x = 0
+            self.count_ai = 1
+
 
         if self.y > 770 and self.x < 325:
             self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
@@ -80,12 +93,14 @@ class Ball:
 
 
     def moveball_right(self,frame_time):
-
+        self.distance_x = 0
+        self.distance_y = 0
         self.distance_x = Ball.RUN_SPEED_PPS * frame_time
 
 
     def moveball_left(self,frame_time):
-
+        self.distance_x = 0
+        self.distance_y = 0
         self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)
 
 
@@ -93,26 +108,26 @@ class Ball:
         self.distance_x = 0
         self.distance_y = 0
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time
-        self.distance_x = Ball.RUN_SPEED_PPS * frame_time
+        self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(self.r/4)
 
 
     def moveball_up_left(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time
-        self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)
+        self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)*(self.r/4)
 
 
     def moveball_down_left(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
-        self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)
+        self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)*(self.r/4)
 
 
     def moveball_down_right(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
-        self.distance_x = Ball.RUN_SPEED_PPS * frame_time
+        self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(self.r/4)
 
