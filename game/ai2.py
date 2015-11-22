@@ -4,10 +4,10 @@ import random
 from pico2d import *
 
 
-class Ai1:
+class Ai2:
 
     PIXEL_PER_METER = (10.0 / 0.3) # 10 PIXEL 30cm
-    RUN_SPEED_KMPH = 50.0          # Km / Hour 캐릭터속도조절가능
+    RUN_SPEED_KMPH = 100.0         # Km / Hour 캐릭터속도조절가능
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS *  PIXEL_PER_METER) #초당 몇 픽셀?
@@ -45,7 +45,7 @@ class Ai1:
 
 
     def update(self,frame_time):
-        self.distance = Ai1.RUN_SPEED_PPS * frame_time
+        self.distance = Ai2.RUN_SPEED_PPS * frame_time
         self.frame = (self.frame + 1) % 1
         self.handle_state[self.state](self)
 
@@ -56,8 +56,8 @@ class Ai1:
         self.run_frames = 0
         self.distance = 0
         self.state = self.RIGHT_RUN
-        if Ai1.image == None:
-            Ai1.image = load_image('resource/character/AI1.png')
+        if Ai2.image == None:
+            Ai2.image = load_image('resource/character/AI2.png')
 
 
     def draw(self):
@@ -65,11 +65,11 @@ class Ai1:
 
 
     def get_up(self):
-        return self.x - 10, self.y, self.x  + 10, self.y + 40
+        return self.x - 15, self.y, self.x  + 15, self.y + 40
 
 
     def get_down(self):
-        return self.x - 10, self.y - 40, self.x  + 10, self.y
+        return self.x - 15, self.y - 50, self.x  + 15, self.y
 
 
     def get_right(self):

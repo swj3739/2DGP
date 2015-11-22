@@ -12,7 +12,7 @@ class Ball:
     TIME_PER_ACTION = 0.5
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 8
-    image = None;
+
 
 
     def __init__(self):
@@ -24,8 +24,7 @@ class Ball:
         self.count_user = 0
         self.count_ai = 0
         self.r = 0
-        if Ball.image == None:
-             Ball.image = load_image('resource/etc/SoccerBall.png')
+        self.image = load_image('resource/etc/SoccerBall.png')
 
 
     def update(self, frame_time):

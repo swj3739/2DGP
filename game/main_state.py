@@ -80,18 +80,23 @@ class Number_Me:
         if Number_Me.image == None:
             Number_Me.image = load_image('resource/etc/Number.png')
         self.frame = 0
+        self.end_time = 0
 
 
     def update(self):
         if ball.count_user == 1:
              self.frame = self.frame + 1
              ball.count_user = 0
+             if self.frame >= 5:
+                 self.end_time = current_time
+
 
 
 
 
     def draw(self):
         self.image.clip_draw(self.frame*23, 0,23, 76, 200, 30)
+        print(self. end_time)
 
 
 class Number_Ai:
@@ -266,8 +271,10 @@ def handle_events():
 
         elif event.type == SDL_KEYDOWN and event.key ==SDLK_ESCAPE:
             game_framework.quit()
-        #elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-           #  game_framework.push_state(main_state2)
+        if number_me.frame >= 5:
+             if current_time - number_me.end_time > 5:
+                game_framework.push_state(main_state2)
+
 
 
 def collide_up(a, b):
