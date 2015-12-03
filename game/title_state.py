@@ -1,24 +1,17 @@
 import game_framework
-import main_state
+import round_1
 from pico2d import *
 
 
 name = "TitleState"
 image = None
-press=None
-
 
 def enter():
-    global image,press
+    global image
     image = load_image('resource/etc/title.png')
-    press = load_image('resource/etc/press.png')
 
 
-def exit():
-    global image,press
-    del(image)
-    del(press)
-    close_canvas()
+
 
 
 def handle_events():
@@ -30,13 +23,13 @@ def handle_events():
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                game_framework.push_state(main_state)
+                game_framework.push_state(round_1)
+                
 
 
 def draw():
     clear_canvas()
-    image.draw(400,300)
-    press.draw(400,120)
+    image.draw(400,400)
     update_canvas()
 
 

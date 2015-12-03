@@ -10,7 +10,7 @@ logo_time = 0.0
 
 def enter():
     global image
-    open_canvas(800,480)
+    open_canvas(800,800,sync = True)
     image=load_image('resource/etc/game_credit.png')
 
 
@@ -34,7 +34,7 @@ def update():
 def draw():
     global image
     clear_canvas()
-    image.draw(400,240)
+    image.draw(400,400)
     update_canvas()
 
 

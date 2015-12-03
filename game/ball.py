@@ -32,14 +32,14 @@ class Ball:
         self.y += self.distance_y
         self.x += self.distance_x
         self.r = random.randint(0,10)
-        if self.y > 800 :
+        if self.y > 830 :
             self.y = 300
             self.x = 400
             self.distance_y = 0
             self.distance_x = 0
             self.count_user = 1
 
-        if  self.y < 70:
+        if  self.y < 40:
             self.y = 300
             self.x = 400
             self.distance_y = 0
@@ -54,7 +54,7 @@ class Ball:
             self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
 
 
-        if self.y <90 and self.x < 325:
+        if self.y < 100 and self.x < 325:
             self.distance_y = Ball.RUN_SPEED_PPS * frame_time
 
         if self.y <100 and self.x > 475:

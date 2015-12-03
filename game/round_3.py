@@ -4,7 +4,7 @@ import os
 import sys
 sys.path.append('../LabsAll/Labs')
 import game_framework
-import main_state3
+import round_4
 from pico2d import *
 
 
@@ -25,7 +25,6 @@ class Ai3:
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 8
 
-    image = None;
 
     LEFT_RUN, RIGHT_RUN= 0, 1
 
@@ -75,8 +74,7 @@ class Ai3:
         self.run_frames = 0
         self.distance = 0
         self.state = self.RIGHT_RUN
-        if Ai3.image == None:
-            Ai3.image = load_image('resource/character/AI3.png')
+        self.image = load_image('resource/character/AI3.png')
 
 
     def draw(self):
@@ -128,11 +126,9 @@ class Ai3:
 
 class Ground:
 
-    image = None;
 
     def __init__(self):
-        if Ground.image == None:
-            Ground.image = load_image('resource/background/playground.png')
+        self.image = load_image('resource/background/playground.png')
         self.x,self.y = 400,400
 
 
@@ -173,12 +169,8 @@ class Audience2:
 class ScoreBoard:
 
 
-    image = None;
-
-
     def __init__(self):
-        if ScoreBoard.image == None:
-            ScoreBoard.image = load_image('resource/etc/ScoreBoard.png')
+        self.image = load_image('resource/etc/ScoreBoard.png')
 
     def draw(self):
         self.image.clip_draw(0,0,800,70,400,20)
@@ -186,37 +178,32 @@ class ScoreBoard:
 
 class Number_Me:
 
-
-    image = None;
-
-
     def __init__(self):
-        if Number_Me.image == None:
-            Number_Me.image = load_image('resource/etc/Number.png')
+        self.image = load_image('resource/etc/Number.png')
         self.frame = 0
+        self.end_time = 0
 
 
     def update(self):
         if ball.count_user == 1:
              self.frame = self.frame + 1
              ball.count_user = 0
+             if self.frame >= 5:
+                 self.end_time = current_time
+
 
 
 
 
     def draw(self):
         self.image.clip_draw(self.frame*23, 0,23, 76, 200, 30)
+        print(self. end_time)
 
 
 class Number_Ai:
 
-
-    image = None;
-
-
     def __init__(self):
-        if Number_Ai.image == None:
-            Number_Ai.image = load_image('resource/etc/Number.png')
+        self.image = load_image('resource/etc/Number.png')
         self.frame = 0
 
 
@@ -235,12 +222,10 @@ class Number_Ai:
 class Win:
 
 
-    image = None;
 
 
     def __init__(self):
-        if Win.image == None:
-            Win.image = load_image('resource/etc/Win.png')
+        self.image = load_image('resource/etc/Win.png')
 
     def draw(self):
         self.image.clip_draw(0,0,309,84,450,400)
@@ -249,12 +234,8 @@ class Win:
 class Lose:
 
 
-    image = None;
-
-
     def __init__(self):
-        if Lose.image == None:
-            Lose.image = load_image('resource/etc/Lose.png')
+        self.image = load_image('resource/etc/Lose.png')
 
     def draw(self):
         self.image.clip_draw(0,0,309,84,400,400)
@@ -263,12 +244,8 @@ class Lose:
 class GameStart:
 
 
-    image = None;
-
-
     def __init__(self):
-        if GameStart.image == None:
-            GameStart.image = load_image('resource/etc/GameStart.png')
+        self.image = load_image('resource/etc/GameStart.png')
         self.x = 400
     def update(self):
         if current_time > 4:
@@ -282,12 +259,9 @@ class GameStart:
 class User:
 
 
-    image = None;
-
     def __init__(self):
 
-        if User.image == None:
-            User.image = load_image('resource/character/User.png')
+        self.image = load_image('resource/character/User.png')
 
     def get_up(self):
         return self.x - 10, self.y, self.x  + 10, self.y + 40
@@ -338,7 +312,6 @@ class User:
 
     def draw(self):
         self.image.clip_draw(0, 0, 100, 112,self.x,self.y)
-        print(current_time)
 
 
 def handle_events():
@@ -380,8 +353,9 @@ def handle_events():
 
         elif event.type == SDL_KEYDOWN and event.key ==SDLK_ESCAPE:
             game_framework.quit()
-        #elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-           #  game_framework.push_state(main_state3)
+        if number_me.frame >= 5:
+             if current_time - number_me.end_time > 5:
+                game_framework.change_state(round_4)
 
 
 def collide_up(a, b):
@@ -490,7 +464,6 @@ hide_cursor()
 
 def enter():
     global ground,audience1,audience2,user,ball,ai3,scoreboard,number_me,number_ai,win,lose,gamestart
-    open_canvas(800,800,sync = True)
     user=User()
     ground=Ground()
     audience1 = Audience1()
@@ -517,7 +490,6 @@ def exit():
     del(number_me)
     del(number_ai)
     del(gamestart)
-    close_canvas()
 
 def get_frame_time():
 

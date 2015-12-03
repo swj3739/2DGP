@@ -4,24 +4,18 @@ import os
 import sys
 sys.path.append('../LabsAll/Labs')
 import game_framework
-import main_state2
 from pico2d import *
+
 
 
 from ball import Ball
 time = 0
 
 
-import random
-
-
-from pico2d import *
-
-
-class Ai1:
+class Ai4:
 
     PIXEL_PER_METER = (10.0 / 0.3) # 10 PIXEL 30cm
-    RUN_SPEED_KMPH = 50.0          # Km / Hour 캐릭터속도조절가능
+    RUN_SPEED_KMPH = 70.0          # Km / Hour 캐릭터속도조절가능
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS *  PIXEL_PER_METER) #초당 몇 픽셀?
@@ -30,7 +24,6 @@ class Ai1:
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 8
 
-    image = None;
 
     LEFT_RUN, RIGHT_RUN= 0, 1
 
@@ -40,6 +33,10 @@ class Ai1:
         if self.x < 150:
             self.state = self.RIGHT_RUN
             self.x = 150
+        if self.x < ball.x:
+            self.state = self.RIGHT_RUN
+            self.x = ball.x
+
 
 
     def handle_right_run(self):
@@ -48,6 +45,12 @@ class Ai1:
         if self.x > 650:
             self.state = self.LEFT_RUN
             self.x = 650
+        if self.x > ball.x:
+            self.state = self.LEFT_RUN
+            self.x = ball.x
+
+
+
 
 
     handle_state = {
@@ -59,7 +62,7 @@ class Ai1:
 
 
     def update(self,frame_time):
-        self.distance = Ai1.RUN_SPEED_PPS * frame_time
+        self.distance = Ai4.RUN_SPEED_PPS * frame_time
         self.frame = (self.frame + 1) % 1
         self.handle_state[self.state](self)
 
@@ -70,8 +73,7 @@ class Ai1:
         self.run_frames = 0
         self.distance = 0
         self.state = self.RIGHT_RUN
-        if Ai1.image == None:
-            Ai1.image = load_image('resource/character/AI1.png')
+        self.image = load_image('resource/character/AI4.png')
 
 
     def draw(self):
@@ -123,11 +125,9 @@ class Ai1:
 
 class Ground:
 
-    image = None;
 
     def __init__(self):
-        if Ground.image == None:
-            Ground.image = load_image('resource/background/playground.png')
+        self.image = load_image('resource/background/playground.png')
         self.x,self.y = 400,400
 
 
@@ -168,12 +168,8 @@ class Audience2:
 class ScoreBoard:
 
 
-    image = None;
-
-
     def __init__(self):
-        if ScoreBoard.image == None:
-            ScoreBoard.image = load_image('resource/etc/ScoreBoard.png')
+        self.image = load_image('resource/etc/ScoreBoard.png')
 
     def draw(self):
         self.image.clip_draw(0,0,800,70,400,20)
@@ -181,13 +177,8 @@ class ScoreBoard:
 
 class Number_Me:
 
-
-    image = None;
-
-
     def __init__(self):
-        if Number_Me.image == None:
-            Number_Me.image = load_image('resource/etc/Number.png')
+        self.image = load_image('resource/etc/Number.png')
         self.frame = 0
         self.end_time = 0
 
@@ -210,13 +201,8 @@ class Number_Me:
 
 class Number_Ai:
 
-
-    image = None;
-
-
     def __init__(self):
-        if Number_Ai.image == None:
-            Number_Ai.image = load_image('resource/etc/Number.png')
+        self.image = load_image('resource/etc/Number.png')
         self.frame = 0
 
 
@@ -235,12 +221,10 @@ class Number_Ai:
 class Win:
 
 
-    image = None;
 
 
     def __init__(self):
-        if Win.image == None:
-            Win.image = load_image('resource/etc/Win.png')
+        self.image = load_image('resource/etc/Win.png')
 
     def draw(self):
         self.image.clip_draw(0,0,309,84,450,400)
@@ -249,12 +233,8 @@ class Win:
 class Lose:
 
 
-    image = None;
-
-
     def __init__(self):
-        if Lose.image == None:
-            Lose.image = load_image('resource/etc/Lose.png')
+        self.image = load_image('resource/etc/Lose.png')
 
     def draw(self):
         self.image.clip_draw(0,0,309,84,400,400)
@@ -263,12 +243,8 @@ class Lose:
 class GameStart:
 
 
-    image = None;
-
-
     def __init__(self):
-        if GameStart.image == None:
-            GameStart.image = load_image('resource/etc/GameStart.png')
+        self.image = load_image('resource/etc/GameStart.png')
         self.x = 400
     def update(self):
         if current_time > 4:
@@ -282,12 +258,9 @@ class GameStart:
 class User:
 
 
-    image = None;
-
     def __init__(self):
 
-        if User.image == None:
-            User.image = load_image('resource/character/User.png')
+        self.image = load_image('resource/character/User.png')
 
     def get_up(self):
         return self.x - 10, self.y, self.x  + 10, self.y + 40
@@ -338,7 +311,6 @@ class User:
 
     def draw(self):
         self.image.clip_draw(0, 0, 100, 112,self.x,self.y)
-        print(current_time)
 
 
 def handle_events():
@@ -380,13 +352,8 @@ def handle_events():
 
         elif event.type == SDL_KEYDOWN and event.key ==SDLK_ESCAPE:
             game_framework.quit()
-        #if number_me.frame >= 5:
-        if   number_me.frame >= 0:
-             #if current_time - number_me.end_time > 5:
-              if current_time > 5:
-                game_framework.push_state(main_state2)
-
-
+        #elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
+           #  game_framework.push_state(main_state3)
 
 
 def collide_up(a, b):
@@ -494,15 +461,14 @@ hide_cursor()
 
 
 def enter():
-    global ground,audience1,audience2,user,ball,ai1,scoreboard,number_me,number_ai,win,lose,gamestart
-    open_canvas(800,800,sync = True)
+    global ground,audience1,audience2,user,ball,ai4,scoreboard,number_me,number_ai,win,lose,gamestart
     user=User()
     ground=Ground()
     audience1 = Audience1()
     audience2 = Audience2()
     scoreboard = ScoreBoard()
     ball = Ball()
-    ai1 = Ai1()
+    ai4 = Ai4()
     win = Win()
     lose = Lose()
     number_me = Number_Me()
@@ -511,13 +477,13 @@ def enter():
 
 
 def exit():
-    global ground,audience1,audience2,user,ball,ai1,scoreboard,number_me,number_ai,win,lose,gamestart
+    global ground,audience1,audience2,user,ball,ai4,scoreboard,number_me,number_ai,win,lose,gamestart
     del(ground)
     del(audience1)
     del(audience2)
     del(user)
     del(ball)
-    del(ai1)
+    del(ai4)
     del(scoreboard)
     del(number_me)
     del(number_ai)
@@ -534,7 +500,7 @@ def get_frame_time():
 def update():
      global time
      time = get_frame_time()
-     ai1.update(time)
+     ai4.update(time)
      ball.update(time)
      user.update(time)
      number_me.update()
@@ -557,21 +523,21 @@ def update():
      if collide_down_right (user,ball):
          ball.moveball_down_right(time)
 
-     if collide_up(ai1,ball):#ai와 볼충돌
+     if collide_up(ai4,ball):#ai와 볼충돌
          ball.moveball_up(time)
-     if collide_down(ai1,ball):
+     if collide_down(ai4,ball):
          ball.moveball_down(time)
-     if collide_right(ai1,ball):
+     if collide_right(ai4,ball):
          ball.moveball_right(time)
-     if collide_left(ai1,ball):
+     if collide_left(ai4,ball):
          ball.moveball_left(time)
-     if collide_up_right(ai1,ball):
+     if collide_up_right(ai4,ball):
          ball.moveball_up_right(time)
-     if collide_up_left(ai1,ball):
+     if collide_up_left(ai4,ball):
          ball.moveball_up_left(time)
-     if collide_down_left(ai1,ball):
+     if collide_down_left(ai4,ball):
          ball.moveball_down_left(time)
-     if collide_down_right (ai1,ball):
+     if collide_down_right (ai4,ball):
          ball.moveball_down_right(time)
 
 
@@ -588,10 +554,10 @@ def draw():
     number_me.draw()
     number_ai.draw()
     ball.draw()
-    ai1.draw()
+    ai4.draw()
     user.draw_bb()
     ball.draw_bb()
-    ai1.draw_bb()
+    ai4.draw_bb()
     gamestart.draw()
     if number_me.frame >= 5:
         win.draw()
