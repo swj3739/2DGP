@@ -5,10 +5,14 @@ from pico2d import *
 
 name = "TitleState"
 image = None
-
+bgm = None
 def enter():
     global image
+    global bgm
     image = load_image('resource/etc/title.png')
+    bgm = load_music('sound/background_sound.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
 
 
@@ -23,6 +27,7 @@ def handle_events():
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
+                bgm.stop()
                 game_framework.push_state(round_1)
                 
 

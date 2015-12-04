@@ -5,6 +5,7 @@ import sys
 sys.path.append('../LabsAll/Labs')
 import game_framework
 import round_3
+import lose_screen
 from pico2d import *
 
 
@@ -194,12 +195,15 @@ class Number_Ai:
     def __init__(self):
         self.image = load_image('resource/etc/Number.png')
         self.frame = 0
+        self.end_time = 0
 
 
     def update(self):
         if ball.count_ai == 1:
              self.frame = self.frame + 1
              ball.count_ai = 0
+             if self.frame >= 5:
+                  self.end_time = current_time
 
 
 
@@ -222,12 +226,18 @@ class Win:
 
 class Lose:
 
+    sound = None
 
     def __init__(self):
         self.image = load_image('resource/etc/Lose.png')
+        if Lose.sound == None:
+            Lose.sound = load_wav('sound/lose.wav')
+            Lose.sound.set_volume(32)
 
     def draw(self):
         self.image.clip_draw(0,0,309,84,400,400)
+
+
 
 
 class GameStart:
@@ -343,14 +353,20 @@ def handle_events():
             game_framework.quit()
         if number_me.frame >= 5:
              if current_time - number_me.end_time > 5:
-                game_framework.change_state(round_3)
+                game_framework.push_state(round_3)
+
+
+        if number_ai.frame >= 5:
+            if current_time - number_ai.end_time > 5:
+                Lose.sound.play()
+                game_framework.change_state(lose_screen)
 
 
 def collide_up(a, b):
    left_a, bottom_a, right_a, top_a = a.get_up()
    left_b, bottom_b, right_b, top_b = b.get_bb()
-   #self.x - 30, self.y - 40, self.x  + 30, self.y + 40
-   #self.x - 20, self. y - 20, self. x + 20, self.y + 20
+
+
    if left_a > right_b: return False
    if right_a < left_b: return False
    if top_a < bottom_b: return False
@@ -361,8 +377,8 @@ def collide_up(a, b):
 def collide_down(a, b):
    left_a, bottom_a, right_a, top_a = a.get_down()
    left_b, bottom_b, right_b, top_b = b.get_bb()
-   #self.x - 30, self.y - 40, self.x  + 30, self.y + 40
-   #self.x - 20, self. y - 20, self. x + 20, self.y + 20
+
+
    if left_a > right_b: return False
    if right_a < left_b: return False
    if top_a < bottom_b: return False

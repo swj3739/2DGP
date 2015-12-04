@@ -5,7 +5,7 @@ import sys
 sys.path.append('../LabsAll/Labs')
 import game_framework
 import round_2
-
+import lose_screen
 from pico2d import *
 
 
@@ -232,9 +232,13 @@ class Win:
 
 class Lose:
 
+    sound = None
 
     def __init__(self):
         self.image = load_image('resource/etc/Lose.png')
+        if Lose.sound == None:
+            Lose.sound = load_wav('sound/lose.wav')
+            Lose.sound.set_volume(32)
 
     def draw(self):
         self.image.clip_draw(0,0,309,84,400,400)
@@ -357,12 +361,14 @@ def handle_events():
 
         if number_me.frame >= 5:
             if current_time - number_me.end_time > 5:
-                game_framework.change_state(round_2)
+                game_framework.push_state(round_2)
 
 
         if number_ai.frame >= 5:
+
             if current_time - number_ai.end_time > 5:
-                game_framework.change_state(round_2)
+                Lose.sound.play()
+                game_framework.change_state(lose_screen)
 
 
 
@@ -516,6 +522,7 @@ def update():
      number_me.update()
      number_ai.update()
      gamestart.update()
+
      if collide_up(user,ball):#유저와 볼 충돌
          ball.moveball_up(time)
      if collide_down(user,ball):

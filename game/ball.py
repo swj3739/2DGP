@@ -12,7 +12,7 @@ class Ball:
     TIME_PER_ACTION = 0.5
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 8
-
+    sound =None
 
 
     def __init__(self):
@@ -25,6 +25,9 @@ class Ball:
         self.count_ai = 0
         self.r = 0
         self.image = load_image('resource/etc/SoccerBall.png')
+        if Ball.sound == None:
+            Ball.sound = load_wav('sound/ball_sound.wav')
+            Ball.sound.set_volume(16)
 
 
     def update(self, frame_time):
@@ -49,23 +52,29 @@ class Ball:
 
         if self.y > 770 and self.x < 325:
             self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
+            self.sound.play()
 
         if self.y > 770 and self.x > 475:
             self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
+            self.sound.play()
 
 
         if self.y < 100 and self.x < 325:
             self.distance_y = Ball.RUN_SPEED_PPS * frame_time
+            self.sound.play()
 
         if self.y <100 and self.x > 475:
             self.distance_y = Ball.RUN_SPEED_PPS * frame_time
+            self.sound.play()
 
         if self.x > 650:
             self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)
+            self.sound.play()
 
 
         if self.x < 150:
             self.distance_x = Ball.RUN_SPEED_PPS * frame_time
+            self.sound.play()
 
 
 
@@ -77,35 +86,41 @@ class Ball:
         return self.x - 20, self. y - 20, self. x + 20, self.y + 20
 
 
+
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
 
     def moveball_up(self,frame_time):
         self.distance_x = 0
+        self.sound.play()
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time
 
 
     def moveball_down(self,frame_time):
         self.distance_x = 0
+        self.sound.play()
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
 
 
     def moveball_right(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
+        self.sound.play()
         self.distance_x = Ball.RUN_SPEED_PPS * frame_time
 
 
     def moveball_left(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
+        self.sound.play()
         self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)
 
 
     def moveball_up_right(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
+        self.sound.play()
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time
         self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(self.r/4)
 
@@ -113,6 +128,7 @@ class Ball:
     def moveball_up_left(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
+        self.sound.play()
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time
         self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)*(self.r/4)
 
@@ -120,6 +136,7 @@ class Ball:
     def moveball_down_left(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
+        self.sound.play()
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
         self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(-1)*(self.r/4)
 
@@ -127,6 +144,7 @@ class Ball:
     def moveball_down_right(self,frame_time):
         self.distance_x = 0
         self.distance_y = 0
+        self.sound.play()
         self.distance_y = Ball.RUN_SPEED_PPS * frame_time*(-1)
         self.distance_x = Ball.RUN_SPEED_PPS * frame_time*(self.r/4)
 
