@@ -17,7 +17,7 @@ time = 0
 class Ai3:
 
     PIXEL_PER_METER = (10.0 / 0.3) # 10 PIXEL 30cm
-    RUN_SPEED_KMPH = 50.0          # Km / Hour 캐릭터속도조절가능
+    RUN_SPEED_KMPH = 20.0          # Km / Hour 캐릭터속도조절가능
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS *  PIXEL_PER_METER) #초당 몇 픽셀?
@@ -231,6 +231,7 @@ class Win:
     def __init__(self):
         self.image = load_image('resource/etc/Win.png')
 
+
     def draw(self):
         self.image.clip_draw(0,0,309,84,450,400)
 
@@ -252,15 +253,17 @@ class Lose:
 
 class GameStart:
 
+    sound = None
 
     def __init__(self):
         self.image = load_image('resource/etc/GameStart.png')
         self.x = 400
+        if GameStart.sound == None:
+            GameStart.sound = load_wav('sound/start.wav')
+            GameStart.sound.set_volume(32)
+            GameStart.sound.play(1)
     def update(self):
-        if current_time > 4:
-            self.x = 1000
-
-
+        pass
     def draw(self):
         self.image.clip_draw(0,0,346,140,self.x,400)
 
@@ -568,7 +571,8 @@ def draw():
     user.draw_bb()
     ball.draw_bb()
     ai3.draw_bb()
-    gamestart.draw()
+    if current_time <4:
+        gamestart.draw()
     if number_me.frame >= 5:
         win.draw()
     if number_ai.frame >= 5:

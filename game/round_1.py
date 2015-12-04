@@ -220,7 +220,7 @@ class Number_Ai:
 
 class Win:
 
-
+    sound = None
 
 
     def __init__(self):
@@ -246,13 +246,20 @@ class Lose:
 
 class GameStart:
 
+    sound = None
 
     def __init__(self):
         self.image = load_image('resource/etc/GameStart.png')
         self.x = 400
+        if GameStart.sound == None:
+            GameStart.sound = load_wav('sound/start.wav')
+            GameStart.sound.set_volume(32)
+            GameStart.sound.play(1)
     def update(self):
-        if current_time > 4:
-            self.x = 1000
+        pass
+
+
+
 
 
     def draw(self):
@@ -575,7 +582,8 @@ def draw():
     user.draw_bb()
     ball.draw_bb()
     ai1.draw_bb()
-    gamestart.draw()
+    if current_time < 4:
+        gamestart.draw()
     if number_me.frame >= 5:
         win.draw()
     if number_ai.frame >= 5:

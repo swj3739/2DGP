@@ -212,13 +212,14 @@ class Number_Ai:
         self.image.clip_draw(self.frame*23, 0,23, 76, 600, 30)
 
 
-class Win:
 
+class Win:
 
 
 
     def __init__(self):
         self.image = load_image('resource/etc/Win.png')
+
 
     def draw(self):
         self.image.clip_draw(0,0,309,84,450,400)
@@ -242,13 +243,17 @@ class Lose:
 
 class GameStart:
 
+    sound = None
 
     def __init__(self):
         self.image = load_image('resource/etc/GameStart.png')
         self.x = 400
+        if GameStart.sound == None:
+            GameStart.sound = load_wav('sound/start.wav')
+            GameStart.sound.set_volume(32)
+            GameStart.sound.play(1)
     def update(self):
-        if current_time > 4:
-            self.x = 1000
+        pass
 
 
     def draw(self):
@@ -352,7 +357,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key ==SDLK_ESCAPE:
             game_framework.quit()
         if number_me.frame >= 5:
-             if current_time - number_me.end_time > 5:
+            if current_time - number_me.end_time > 5:
                 game_framework.push_state(round_3)
 
 
@@ -564,7 +569,8 @@ def draw():
     user.draw_bb()
     ball.draw_bb()
     ai2.draw_bb()
-    gamestart.draw()
+    if current_time <4:
+        gamestart.draw()
     if number_me.frame >= 5:
         win.draw()
     if number_ai.frame >= 5:

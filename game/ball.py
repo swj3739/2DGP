@@ -13,6 +13,7 @@ class Ball:
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 8
     sound =None
+    goal = None
 
 
     def __init__(self):
@@ -28,6 +29,10 @@ class Ball:
         if Ball.sound == None:
             Ball.sound = load_wav('sound/ball_sound.wav')
             Ball.sound.set_volume(16)
+        if Ball.goal == None:
+            Ball.goal = load_wav('sound/goal.wav')
+            Ball.goal.set_volume(32)
+
 
 
     def update(self, frame_time):
@@ -35,19 +40,22 @@ class Ball:
         self.y += self.distance_y
         self.x += self.distance_x
         self.r = random.randint(0,10)
-        if self.y > 830 :
+        if self.x > 325 and self.x <475 and self.y > 770 :
+            self.goal.play()
             self.y = 300
             self.x = 400
             self.distance_y = 0
             self.distance_x = 0
             self.count_user = 1
 
-        if  self.y < 40:
+        if  self.x > 325 and self.x <475 and self.y < 100:
+            self.goal.play()
             self.y = 300
             self.x = 400
             self.distance_y = 0
             self.distance_x = 0
             self.count_ai = 1
+
 
 
         if self.y > 770 and self.x < 325:
