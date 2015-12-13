@@ -198,7 +198,6 @@ class Number_Me:
 
     def draw(self):
         self.image.clip_draw(self.frame*23, 0,23, 76, 200, 30)
-        print(self. end_time)
 
 
 class Number_Ai:
@@ -370,13 +369,13 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key ==SDLK_ESCAPE:
             game_framework.quit()
         if number_me.frame >= 5:
-            if current_time - number_me.end_time > 5:
+            if current_time - number_me.end_time > 3:
                 win.sound.play()
                 game_framework.push_state(victory_screen)
 
 
         if number_ai.frame >= 5:
-            if current_time - number_ai.end_time > 5:
+            if current_time - number_ai.end_time > 3:
                 Lose.sound.play()
                 game_framework.change_state(lose_screen)
 
@@ -578,16 +577,16 @@ def draw():
     number_ai.draw()
     ball.draw()
     ai4.draw()
-    user.draw_bb()
-    ball.draw_bb()
-    ai4.draw_bb()
+   # user.draw_bb()
+    #ball.draw_bb()
+    #ai4.draw_bb()
     if current_time <4:
         gamestart.draw()
     if number_me.frame >= 5:
         win.draw()
     if number_ai.frame >= 5:
         lose.draw()
-    ground.draw_bb()
+    #ground.draw_bb()
     update_canvas()
 
 

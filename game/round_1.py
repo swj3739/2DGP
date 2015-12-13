@@ -192,7 +192,7 @@ class Number_Me:
 
     def draw(self):
         self.image.clip_draw(self.frame*23, 0,23, 76, 200, 30)
-        print(self. end_time)
+
 
 
 class Number_Ai:
@@ -253,8 +253,7 @@ class GameStart:
         self.x = 400
         if GameStart.sound == None:
             GameStart.sound = load_wav('sound/start.wav')
-            GameStart.sound.set_volume(32)
-            GameStart.sound.play(1)
+            GameStart.sound.set_volume(64)
     def update(self):
         pass
 
@@ -367,13 +366,15 @@ def handle_events():
 
 
         if number_me.frame >= 5:
-            if current_time - number_me.end_time > 5:
+            if current_time - number_me.end_time > 3:
+                GameStart.sound.play(1)
                 game_framework.push_state(round_2)
+
 
 
         if number_ai.frame >= 5:
 
-            if current_time - number_ai.end_time > 5:
+            if current_time - number_ai.end_time > 3:
                 Lose.sound.play()
                 game_framework.change_state(lose_screen)
 
@@ -579,16 +580,16 @@ def draw():
     number_ai.draw()
     ball.draw()
     ai1.draw()
-    user.draw_bb()
-    ball.draw_bb()
-    ai1.draw_bb()
+    #user.draw_bb()
+    #ball.draw_bb()
+    #ai1.draw_bb()
     if current_time < 4:
         gamestart.draw()
     if number_me.frame >= 5:
         win.draw()
     if number_ai.frame >= 5:
         lose.draw()
-    ground.draw_bb()
+    #ground.draw_bb()
     update_canvas()
 
 
