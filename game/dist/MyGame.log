@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "mygame.py", line 13, in <module>
+  File "C:\Users\yang\PycharmProjects\game\game_framework.py", line 92, in run
+    stack[-1].exit()
+AttributeError: 'module' object has no attribute 'exit'
